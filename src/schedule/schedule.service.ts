@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ScheduleHandlerFactoryService } from "./scheduleHandlerFactory.service";
-import { StorageListItemDto } from "../../common/dto/storage.dto";
+import { StorageListItemDto } from "../common/dto/storage.dto";
 
-import { axios } from '../../utils';
+import { axios } from '../utils';
 
 const { DAOZHAO_CRAWL_SERVER, EXAM_SCHEDULE_MINUTES  } = require('@daozhao/config');
 

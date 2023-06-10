@@ -1,10 +1,10 @@
-import { UpdateListService } from "../../common/service/storage/updateList.service";
+import { UpdateListService } from "../common/service/storage/updateList.service";
 
 const { dLog } = require('@daozhao/utils');
 import { ScheduleFactoryService } from './scheduleFactory.service';
-import Enum from '../../utils/Enum';
+import Enum from '../utils/Enum';
 import { AbstractHttpAdapter, HttpAdapterHost } from "@nestjs/core";
-import { scheduleStorageDto } from "../dto/schedule.dto";
+import { scheduleStorageDto } from "./dto/schedule.dto";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -48,18 +48,18 @@ export class ScheduleHandlerFactoryService {
     }
     // 注册handler型的路由
     const router = require('express').Router();
-    const instance = this.httpAdapter.getInstance();
-    instance.get('/schedule/abc', (req, res) => {
-      indexHandler({}).then(result => {
-        res.send(result);
-      });
-    });
-
-    instance.get('/schedule/list', (req, res) => {
-      res.send({
-        nextUpdateTime: scheduleJobInstance.getInstance() && scheduleJobInstance.getInstance().nextInvocation() || 0,
-      })
-    });
+    // const instance = this.httpAdapter.getInstance();
+    // instance.get('/schedule/abc', (req, res) => {
+    //   indexHandler({}).then(result => {
+    //     res.send(result);
+    //   });
+    // });
+    //
+    // instance.get('/schedule/list', (req, res) => {
+    //   res.send({
+    //     nextUpdateTime: scheduleJobInstance.getInstance() && scheduleJobInstance.getInstance().nextInvocation() || 0,
+    //   })
+    // });
 
     return {
       label,

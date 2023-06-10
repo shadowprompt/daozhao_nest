@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 const nodeSchedule = require('node-schedule');
 
-import { instanceStore } from  '../../utils';
+import { instanceStore } from  '../utils';
 const { dLog } = require('@daozhao/utils');
 
 @Injectable()

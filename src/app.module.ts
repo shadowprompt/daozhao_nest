@@ -9,13 +9,15 @@ import { PostController } from './post/controller/post.controller';
 import { PostService } from './post/service/post.service';
 
 
-import { ScheduleController } from './schedule/controller/schedule.controller';
-import { ScheduleService } from './schedule/service/schedule.service';
-import { ScheduleFactoryService } from './schedule/service/scheduleFactory.service';
-import { ScheduleHandlerFactoryService } from './schedule/service/scheduleHandlerFactory.service';
+import { ScheduleModule } from './schedule/schedule.module';
+import { ScheduleController } from './schedule/schedule.controller';
+import { ScheduleService } from './schedule/schedule.service';
+import { ScheduleFactoryService } from './schedule/scheduleFactory.service';
+import { ScheduleHandlerFactoryService } from './schedule/scheduleHandlerFactory.service';
 
 @Module({
-  imports: [],
+  imports: [ScheduleModule.register({ folder: './config' })],
+  // imports: [TestModule],
   controllers: [AppController, PostController, ScheduleController],
   providers: [AppService, VersionService, UpdateListService, PostService, ScheduleService, ScheduleFactoryService, ScheduleHandlerFactoryService],
 })

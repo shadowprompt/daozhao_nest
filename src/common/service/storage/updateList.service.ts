@@ -6,8 +6,6 @@ import { VersionService } from "./version.service";
 // 通用的根据有无_expire新增和作废list的service
 @Injectable()
 export class UpdateListService {
-  constructor(private readonly versionService: VersionService) {
-  }
   get(storage: StorageDto): Array<any> {
     return getLocalData(storage);
   }
