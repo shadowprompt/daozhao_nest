@@ -1,6 +1,9 @@
+const https = require('https');
 const path = require('path');
-import { StorageDto } from '../common/dto/storage.dto';
+import axios from "axios";
 import { LocalStorage } from 'node-localstorage';
+
+import { StorageDto } from '../common/dto/storage.dto';
 
 export const nodeStore = (scope: string) => {
   const localStoragePath = path.resolve(
@@ -17,6 +20,12 @@ export const getLocalData = (storage: StorageDto) => {
   return JSON.parse(lastDataStr);
 };
 
+export function setLocalData(storage, newData) {
+  const localStorage = nodeStore(storage.name);
+  localStorage.setItem(storage.key, JSON.stringify(newData));
+  return newData;
+}
+
 export function updateLocalData(storage, incomeData, updateHandler = (preVal, incomeData) => preVal) {
   const lastData = getLocalData(storage);
   const newData = updateHandler(lastData, incomeData);
@@ -24,3 +33,13 @@ export function updateLocalData(storage, incomeData, updateHandler = (preVal, in
   localStorage.setItem(storage.key, JSON.stringify(newData));
   return [lastData, newData];
 }
+
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
+});
+
+export {
+  axiosInstance as axios
+};

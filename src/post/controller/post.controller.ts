@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PostService } from '../service/post.service';
-import { VersionService } from '../../common/service/version.service';
+import { VersionService } from '../../common/service/storage/version.service';
 
 @Controller('/post')
 export class PostController {

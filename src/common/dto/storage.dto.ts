@@ -5,3 +5,12 @@ export class StorageDto {
 
   emptyValue?: string;
 }
+
+
+export class StorageListItemDto {
+  type: string;
+  key: string;
+  pathName: string;
+  scheduleMinutes: number
+  _expire: boolean
+}

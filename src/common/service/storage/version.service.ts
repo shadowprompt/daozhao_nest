@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { getLocalData, updateLocalData } from '../../util';
-import { StorageDto } from "../dto/storage.dto";
+import { getLocalData, updateLocalData } from '../../../util';
+import { StorageDto } from "../../dto/storage.dto";
 
 @Injectable()
 export class VersionService {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { VersionService } from '../../common/service/version.service';
+import { VersionService } from '../../common/service/storage/version.service';
 import { pwaVersionStorage } from '../dto/storage.dto';
 
 @Injectable()
