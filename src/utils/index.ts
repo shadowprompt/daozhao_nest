@@ -40,6 +40,19 @@ const axiosInstance = axios.create({
   }),
 });
 
+function instanceStoreMaker() {
+  const instanceMap = {};
+  return {
+    getItem(key) {
+      return instanceMap[key];
+    },
+    setItem(key, value) {
+      return instanceMap[key] = value;
+    }
+  };
+}
+export const instanceStore = instanceStoreMaker();
+
 export {
-  axiosInstance as axios
+  axiosInstance as axios,
 };

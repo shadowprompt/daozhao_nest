@@ -11,10 +11,12 @@ import { PostService } from './post/service/post.service';
 
 import { ScheduleController } from './schedule/controller/schedule.controller';
 import { ScheduleService } from './schedule/service/schedule.service';
+import { ScheduleFactoryService } from './schedule/service/scheduleFactory.service';
+import { ScheduleHandlerFactoryService } from './schedule/service/scheduleHandlerFactory.service';
 
 @Module({
   imports: [],
   controllers: [AppController, PostController, ScheduleController],
-  providers: [AppService, VersionService, UpdateListService, PostService, ScheduleService],
+  providers: [AppService, VersionService, UpdateListService, PostService, ScheduleService, ScheduleFactoryService, ScheduleHandlerFactoryService],
 })
 export class AppModule {}

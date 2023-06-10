@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { getLocalData, updateLocalData } from '../../../util';
+import { getLocalData, updateLocalData } from '../../../utils';
 import { StorageDto } from "../../dto/storage.dto";
 
 @Injectable()

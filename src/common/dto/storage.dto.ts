@@ -10,6 +10,7 @@ export class StorageDto {
 export class StorageListItemDto {
   type: string;
   key: string;
+  serverUrl: string;
   pathName: string;
   scheduleMinutes: number
   _expire: boolean
