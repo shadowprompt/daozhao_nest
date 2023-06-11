@@ -1,8 +1,9 @@
-import { axios, nodeStore } from '../../utils/index';
+import { axios, getLocalData, nodeStore, setLocalData } from "../../utils/index";
 const { dLog } = require('@daozhao/utils');
 import { AccessTokenScheduleInfoDto } from "../dto/schedule.dto";
 import { Injectable } from "@nestjs/common";
 import { ScheduleHandlerFactoryService } from "../scheduleHandlerFactory.service";
+import { StorageDto } from "../../common/dto/storage.dto";
 
 // 完成对官网接口请求的组装任务
 @Injectable()
@@ -13,13 +14,18 @@ export class AccessTokenFactoryService {
     params,
     httpError: (data) => string,
     daozhaoUrl) {
-    const localStorage = nodeStore('../../../localStorage/' + accessTokenScheduleInfoDto.type);
+
+    const storage: StorageDto = {
+      name: accessTokenScheduleInfoDto.type,
+      key: accessTokenScheduleInfoDto.key,
+      emptyValue: `{}`,
+    }
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
     const isAccessTokenValidated = () => {
       return new Promise((resolve) => {
         dLog(`尝试从缓存取${label}`);
-        const oldAccessToken = localStorage.getItem(accessTokenScheduleInfoDto.key);
+        const oldAccessToken = getLocalData(storage);
         let expires_in = 0;
         let access_token;
         if (oldAccessToken) {
@@ -56,7 +62,7 @@ export class AccessTokenFactoryService {
               ...data,
               expires_in: Date.now() + data.expires_in * 1000 - 60000, // 避免和官网服务器之前时间不一致，减少1分钟有效期
             };
-            localStorage.setItem(accessTokenScheduleInfoDto.key, JSON.stringify(newAccessToken));
+            setLocalData(storage, newAccessToken);
             resolve({
               accessToken: newAccessToken,
               _source: 'official',
