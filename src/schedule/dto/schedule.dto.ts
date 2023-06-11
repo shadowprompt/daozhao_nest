@@ -14,3 +14,9 @@ export class ScheduleInfoDto {
   scheduleJobInstance: any;
   requestHandler: any;
 }
+
+export class AccessTokenInfoDto {
+  type: string;
+  key: string;
+  TOKEN_SCHEDULE_MINUTES: number = 120
+}

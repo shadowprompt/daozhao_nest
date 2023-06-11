@@ -1,20 +1,20 @@
-import { axios } from '../../utils/index';
+import { axios, nodeStore } from '../../utils/index';
 const { dLog } = require('@daozhao/utils');
 import serviceFactory from './serviceFactory';
-const {nodeStore} = require('../../utils');
+import { AccessTokenInfoDto } from "../dto/schedule.dto";
 
 // 完成对官网接口请求的组装任务
-function accessTokenServiceFactory({ STORE_TYPE, STORE_KEY, TOKEN_SCHEDULE_MINUTES },
+function accessTokenServiceFactory(accessTokenInfoDto: AccessTokenInfoDto,
                                    params,
                                    httpError: (data) => string,
                                    daozhaoUrl) {
-  const localStorage = nodeStore('../../../localStorage/' + STORE_TYPE);
-  const label = `${STORE_KEY}-@-${STORE_TYPE}`;
+  const localStorage = nodeStore('../../../localStorage/' + accessTokenInfoDto.type);
+  const label = `${accessTokenInfoDto.key}-@-${accessTokenInfoDto.type}`;
 
   const isAccessTokenValidated = () => {
     return new Promise((resolve) => {
       dLog(`尝试从缓存取${label}`);
-      const oldAccessToken = localStorage.getItem(STORE_KEY);
+      const oldAccessToken = localStorage.getItem(accessTokenInfoDto.key);
       let expires_in = 0;
       let access_token;
       if (oldAccessToken) {
@@ -51,7 +51,7 @@ function accessTokenServiceFactory({ STORE_TYPE, STORE_KEY, TOKEN_SCHEDULE_MINUT
             ...data,
             expires_in: Date.now() + data.expires_in * 1000 - 60000, // 避免和官网服务器之前时间不一致，减少1分钟有效期
           };
-          localStorage.setItem(STORE_KEY, JSON.stringify(newAccessToken));
+          localStorage.setItem(accessTokenInfoDto.key, JSON.stringify(newAccessToken));
           resolve({
             accessToken: newAccessToken,
             _source: 'official',
@@ -101,7 +101,7 @@ function accessTokenServiceFactory({ STORE_TYPE, STORE_KEY, TOKEN_SCHEDULE_MINUT
         // 2. 是从缓存获取的token，但是没有定时任务实例了
         let instance = scheduleJobInstance.getInstance();
         if (_source === 'official' || !instance) {
-          instance = setSchedule(TOKEN_SCHEDULE_MINUTES);
+          instance = setSchedule(accessTokenInfoDto.TOKEN_SCHEDULE_MINUTES);
         }
         dLog(`---取${label}成功`, '来源 = ' + _source);
         return {
@@ -118,7 +118,7 @@ function accessTokenServiceFactory({ STORE_TYPE, STORE_KEY, TOKEN_SCHEDULE_MINUT
       });
   }
 
-  const { setSchedule, scheduleJobInstance } = serviceFactory(STORE_TYPE, STORE_KEY, fetchAccessToken);
+  const { setSchedule, scheduleJobInstance } = serviceFactory(accessTokenInfoDto, fetchAccessToken);
 
   return {
     label,

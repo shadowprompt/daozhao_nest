@@ -3,15 +3,15 @@ const nodeSchedule = require('node-schedule');
 const { instanceStore } = require('../../utils');
 const { dLog } = require('@daozhao/utils');
 
-export default function serviceFactory(type, key, fetchData, scheduleMinutes = 60) {
-  const label = `${key}-@-${type}`;
+export default function serviceFactory(accessTokenInfoDto, fetchData) {
+  const label = `${accessTokenInfoDto.key}-@-${accessTokenInfoDto.type}`;
 
   const scheduleJobInstance = {
     getInstance() {
-      return instanceStore.getItem(type);
+      return instanceStore.getItem(accessTokenInfoDto.type);
     },
     setInstance(value) {
-      return instanceStore.setItem(type, value);
+      return instanceStore.setItem(accessTokenInfoDto.type, value);
     }
   };
   /**
