@@ -3,21 +3,22 @@ import { Injectable } from "@nestjs/common";
 const nodeSchedule = require('node-schedule');
 
 import { instanceStore } from  '../utils';
+import { AccessTokenScheduleInfoDto } from "./dto/schedule.dto";
 const { dLog } = require('@daozhao/utils');
 
 @Injectable()
 export class ScheduleFactoryService {
   constructor() {
   }
-  make(type, key, fetchData, scheduleMinutes = 60) {
-    const label = `${key}-@-${type}`;
+  make(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto, fetchData) {
+    const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
     const scheduleJobInstance = {
       getInstance() {
-        return instanceStore.getItem(type);
+        return instanceStore.getItem(accessTokenScheduleInfoDto.type);
       },
       setInstance(value) {
-        return instanceStore.setItem(type, value);
+        return instanceStore.setItem(accessTokenScheduleInfoDto.type, value);
       }
     };
     /**

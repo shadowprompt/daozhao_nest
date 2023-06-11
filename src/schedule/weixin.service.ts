@@ -13,9 +13,9 @@ const params = {
 export class WeixinService {
   make() {
     return accessTokenServiceFactory({
-      STORE_TYPE: 'weixin',
-      STORE_KEY: 'accessToken',
-      TOKEN_SCHEDULE_MINUTES: 32,
+      type: 'weixin',
+      key: 'accessToken',
+      scheduleMinutes: 32,
     }, {
       url: WXMIN_API_URL + '/cgi-bin/token',
       method: 'GET',

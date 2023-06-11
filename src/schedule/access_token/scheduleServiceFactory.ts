@@ -3,7 +3,7 @@ const nodeSchedule = require('node-schedule');
 const { instanceStore } = require('../../utils');
 const { dLog } = require('@daozhao/utils');
 
-export default function serviceFactory(accessTokenInfoDto, fetchData) {
+export default function scheduleServiceFactory(accessTokenInfoDto, fetchData) {
   const label = `${accessTokenInfoDto.key}-@-${accessTokenInfoDto.type}`;
 
   const scheduleJobInstance = {

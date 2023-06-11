@@ -1,20 +1,20 @@
 import { axios, nodeStore } from '../../utils/index';
 const { dLog } = require('@daozhao/utils');
-import serviceFactory from './serviceFactory';
-import { AccessTokenInfoDto } from "../dto/schedule.dto";
+import scheduleServiceFactory from './scheduleServiceFactory';
+import { AccessTokenScheduleInfoDto } from "../dto/schedule.dto";
 
 // 完成对官网接口请求的组装任务
-function accessTokenServiceFactory(accessTokenInfoDto: AccessTokenInfoDto,
+function accessTokenServiceFactory(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto,
                                    params,
                                    httpError: (data) => string,
                                    daozhaoUrl) {
-  const localStorage = nodeStore('../../../localStorage/' + accessTokenInfoDto.type);
-  const label = `${accessTokenInfoDto.key}-@-${accessTokenInfoDto.type}`;
+  const localStorage = nodeStore('../../../localStorage/' + accessTokenScheduleInfoDto.type);
+  const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
   const isAccessTokenValidated = () => {
     return new Promise((resolve) => {
       dLog(`尝试从缓存取${label}`);
-      const oldAccessToken = localStorage.getItem(accessTokenInfoDto.key);
+      const oldAccessToken = localStorage.getItem(accessTokenScheduleInfoDto.key);
       let expires_in = 0;
       let access_token;
       if (oldAccessToken) {
@@ -51,7 +51,7 @@ function accessTokenServiceFactory(accessTokenInfoDto: AccessTokenInfoDto,
             ...data,
             expires_in: Date.now() + data.expires_in * 1000 - 60000, // 避免和官网服务器之前时间不一致，减少1分钟有效期
           };
-          localStorage.setItem(accessTokenInfoDto.key, JSON.stringify(newAccessToken));
+          localStorage.setItem(accessTokenScheduleInfoDto.key, JSON.stringify(newAccessToken));
           resolve({
             accessToken: newAccessToken,
             _source: 'official',
@@ -101,7 +101,7 @@ function accessTokenServiceFactory(accessTokenInfoDto: AccessTokenInfoDto,
         // 2. 是从缓存获取的token，但是没有定时任务实例了
         let instance = scheduleJobInstance.getInstance();
         if (_source === 'official' || !instance) {
-          instance = setSchedule(accessTokenInfoDto.TOKEN_SCHEDULE_MINUTES);
+          instance = setSchedule(accessTokenScheduleInfoDto.scheduleMinutes);
         }
         dLog(`---取${label}成功`, '来源 = ' + _source);
         return {
@@ -118,7 +118,7 @@ function accessTokenServiceFactory(accessTokenInfoDto: AccessTokenInfoDto,
       });
   }
 
-  const { setSchedule, scheduleJobInstance } = serviceFactory(accessTokenInfoDto, fetchAccessToken);
+  const { setSchedule, scheduleJobInstance } = scheduleServiceFactory(accessTokenScheduleInfoDto, fetchAccessToken);
 
   return {
     label,

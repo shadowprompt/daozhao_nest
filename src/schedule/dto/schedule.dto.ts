@@ -15,8 +15,8 @@ export class ScheduleInfoDto {
   requestHandler: any;
 }
 
-export class AccessTokenInfoDto {
+export class AccessTokenScheduleInfoDto {
   type: string;
   key: string;
-  TOKEN_SCHEDULE_MINUTES: number = 120
+  scheduleMinutes: number = 120
 }

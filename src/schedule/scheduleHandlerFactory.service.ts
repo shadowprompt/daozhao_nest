@@ -4,7 +4,7 @@ const { dLog } = require('@daozhao/utils');
 import { ScheduleFactoryService } from './scheduleFactory.service';
 import Enum from '../utils/Enum';
 import { AbstractHttpAdapter, HttpAdapterHost } from "@nestjs/core";
-import { scheduleStorageDto } from "./dto/schedule.dto";
+import { AccessTokenScheduleInfoDto, scheduleStorageDto } from "./dto/schedule.dto";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -16,11 +16,11 @@ export class ScheduleHandlerFactoryService {
   ) {
     this.httpAdapter = this.adapterHost?.httpAdapter;
   }
-  make(type, key, fetchData, defaultScheduleMinutes = 60) {
+  make(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto, fetchData) {
 
-    const label = `${key}-@-${type}`;
+    const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
-    const { setSchedule, scheduleJobInstance } = this.scheduleFactoryService.make(type, key, fetchData);
+    const { setSchedule, scheduleJobInstance } = this.scheduleFactoryService.make(accessTokenScheduleInfoDto, fetchData);
 
     const that = this;
 
@@ -30,8 +30,8 @@ export class ScheduleHandlerFactoryService {
       return fetchData().then(() => {
         // 从localStorage动态获取最新的配置
         const list = that.updateListService.get(scheduleStorageDto)
-        const target = list.find(item => item.type === type && item.key === key);
-        const scheduleMinutes = target && target.scheduleMinutes || defaultScheduleMinutes;
+        const target = list.find(item => item.type === accessTokenScheduleInfoDto.type && item.key === accessTokenScheduleInfoDto.key);
+        const scheduleMinutes = target && target.scheduleMinutes || accessTokenScheduleInfoDto.scheduleMinutes;
 
         const instance = setSchedule(scheduleMinutes);
 
