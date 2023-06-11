@@ -9,7 +9,25 @@ export const scheduleStorageDto: StorageDto = {
 export const weixinAccessTokenDto: AccessTokenScheduleInfoDto = {
   type: 'weixin',
   key: 'accessToken',
-  scheduleMinutes: 32,
+  scheduleMinutes: 120,
+};
+
+export const HMSAccessTokenDto: AccessTokenScheduleInfoDto = {
+  type: 'HMS',
+  key: 'accessToken',
+  scheduleMinutes: 120,
+};
+
+export const HMS_HIAccessTokenDto: AccessTokenScheduleInfoDto = {
+  type: 'HMS_HI',
+  key: 'accessToken',
+  scheduleMinutes: 120,
+};
+
+export const HMS_webPushAccessTokenDto: AccessTokenScheduleInfoDto = {
+  type: 'HMS_webPush',
+  key: 'accessToken',
+  scheduleMinutes: 120,
 };
 
 export class ScheduleInfoDto {

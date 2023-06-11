@@ -1,11 +1,11 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { WeixinService } from "./weixin.service";
+import { HMS_webPushService } from "./HMS_webPush.service";
 
-@Controller('/weixin')
-export class WeixinController {
+@Controller('/HMS_webPush')
+export class HMS_webPushController {
   private scheduleInfo: { setSchedule: any; scheduleJobInstance: any; requestHandler: (requestBody) => any; label: any };
-  constructor(private readonly weixinService: WeixinService) {
-    this.scheduleInfo = this.weixinService.make();
+  constructor(private readonly hms_webPushService: HMS_webPushService) {
+    this.scheduleInfo = this.hms_webPushService.make();
   }
   @Get()
   async set(@Query() query) {

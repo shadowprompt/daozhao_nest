@@ -11,6 +11,15 @@ import { scheduleStorageDto } from "./dto/schedule.dto";
 import { WeixinController } from './access_token/weixin.controller';
 import { WeixinService } from './access_token/weixin.service';
 
+import { HMSController } from './access_token/HMS.controller';
+import { HMSService } from './access_token/HMS.service';
+
+import { HMS_HIController } from './access_token/HMS_HI.controller';
+import { HMS_HIService } from './access_token/HMS_HI.service';
+
+import { HMS_webPushController } from './access_token/HMS_webPush.controller';
+import { HMS_webPushService } from './access_token/HMS_webPush.service';
+
 @Module({})
 export class ScheduleModule {
   static register(options: Record<string, any>): DynamicModule {
@@ -21,7 +30,7 @@ export class ScheduleModule {
 
     return {
       module: ScheduleModule,
-      controllers: controllers.concat(WeixinController),
+      controllers: controllers.concat(WeixinController, HMSController, HMS_HIController, HMS_webPushController),
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
@@ -34,6 +43,9 @@ export class ScheduleModule {
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
         WeixinService,
+        HMSService,
+        HMS_HIService,
+        HMS_webPushService,
       ],
       exports: [
         VersionService,
@@ -42,7 +54,9 @@ export class ScheduleModule {
         ScheduleFactoryService,
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
-        WeixinService
+        WeixinService,
+        HMSService,
+        HMS_HIService,
       ],
     };
   }
