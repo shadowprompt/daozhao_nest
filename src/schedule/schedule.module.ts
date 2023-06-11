@@ -5,11 +5,11 @@ import { VersionService } from '../common/service/storage/version.service';
 import { ScheduleService } from "./schedule.service";
 import { ScheduleFactoryService } from "./scheduleFactory.service";
 import { ScheduleHandlerFactoryService } from "./scheduleHandlerFactory.service";
-import { AccessTokenFactoryService } from './accessTokenFactory.service';
+import { AccessTokenFactoryService } from './access_token/accessTokenFactory.service';
 import { scheduleStorageDto } from "./dto/schedule.dto";
 
-import { WeixinController } from './weixin.controller';
-import { WeixinService } from './weixin.service';
+import { WeixinController } from './access_token/weixin.controller';
+import { WeixinService } from './access_token/weixin.service';
 
 @Module({})
 export class ScheduleModule {

@@ -1,8 +1,8 @@
-import { axios, nodeStore } from '../utils/index';
+import { axios, nodeStore } from '../../utils/index';
 const { dLog } = require('@daozhao/utils');
-import { AccessTokenScheduleInfoDto } from "./dto/schedule.dto";
+import { AccessTokenScheduleInfoDto } from "../dto/schedule.dto";
 import { Injectable } from "@nestjs/common";
-import { ScheduleHandlerFactoryService } from "./scheduleHandlerFactory.service";
+import { ScheduleHandlerFactoryService } from "../scheduleHandlerFactory.service";
 
 // 完成对官网接口请求的组装任务
 @Injectable()

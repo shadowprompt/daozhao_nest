@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { AccessTokenFactoryService } from "./accessTokenFactory.service";
-import { weixinAccessTokenDto } from "./dto/schedule.dto";
+import { weixinAccessTokenDto } from "../dto/schedule.dto";
 const {WXMIN_APPID, WXMIN_APPSECRET, WXMIN_API_URL, DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
 
 const params = {
