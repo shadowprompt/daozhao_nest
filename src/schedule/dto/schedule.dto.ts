@@ -6,6 +6,12 @@ export const scheduleStorageDto: StorageDto = {
   emptyValue: `[]`,
 };
 
+export const weixinAccessTokenDto: AccessTokenScheduleInfoDto = {
+  type: 'weixin',
+  key: 'accessToken',
+  scheduleMinutes: 32,
+};
+
 export class ScheduleInfoDto {
   label: string;
   pathName: string;
