@@ -24,11 +24,13 @@ export class ScheduleHandlerFactoryService {
 
     const that = this;
 
-    function indexHandler(requestBody) {
+    // 实际的请求处理逻辑
+    // fetchData后设置schedule
+    function requestHandler(requestBody) {
       return fetchData().then(() => {
         // 从localStorage动态获取最新的配置
-        const oldList = that.updateListService.get(scheduleStorageDto)
-        const target = oldList.find(item => item.type === type && item.key === key);
+        const list = that.updateListService.get(scheduleStorageDto)
+        const target = list.find(item => item.type === type && item.key === key);
         const scheduleMinutes = target && target.scheduleMinutes || defaultScheduleMinutes;
 
         const instance = setSchedule(scheduleMinutes);
@@ -46,27 +48,12 @@ export class ScheduleHandlerFactoryService {
         };
       });
     }
-    // 注册handler型的路由
-    const router = require('express').Router();
-    // const instance = this.httpAdapter.getInstance();
-    // instance.get('/schedule/abc', (req, res) => {
-    //   indexHandler({}).then(result => {
-    //     res.send(result);
-    //   });
-    // });
-    //
-    // instance.get('/schedule/list', (req, res) => {
-    //   res.send({
-    //     nextUpdateTime: scheduleJobInstance.getInstance() && scheduleJobInstance.getInstance().nextInvocation() || 0,
-    //   })
-    // });
 
     return {
       label,
       setSchedule,
       scheduleJobInstance,
-      indexHandler,
-      router,
+      requestHandler,
     }
   }
 }

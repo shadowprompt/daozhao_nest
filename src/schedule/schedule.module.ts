@@ -12,7 +12,6 @@ export class ScheduleModule {
   static register(options: Record<string, any>): DynamicModule {
     const updateListService = new UpdateListService();
     const list = updateListService.get(scheduleStorageDto);
-    console.log('ScheduleModule register -> ', list, options, ScheduleModule);
     // 生成controller列表
     const controllers = list.map(item => ScheduleControllerMaker(item));
 

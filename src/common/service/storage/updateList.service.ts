@@ -10,12 +10,12 @@ export class UpdateListService {
     return getLocalData(storage);
   }
 
-  set(storage: StorageDto, list: Array<StorageListItemDto>): Array<string>[] {
-    const newListKeyType = list.map(item => this.compareData(item));
+  set(storage: StorageDto, newList: Array<StorageListItemDto>): Array<string>[] {
+    const newListKeyType = newList.map(item => this.compareData(item));
     const oldList = this.get(storage);
     const remainList = oldList.filter(item => !newListKeyType.includes(this.compareData(item))); // 仅保留不在newTypeList的
 
-    const finalList = [...remainList, ...list.filter(item => !item._expire)];
+    const finalList = [...remainList, ...newList.filter(item => !item._expire)];
 
     return setLocalData(storage, finalList);
   }

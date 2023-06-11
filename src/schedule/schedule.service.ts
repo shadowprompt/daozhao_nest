@@ -19,16 +19,15 @@ export class ScheduleService {
 
     const fetchData = () => axios.post(serverUrl + pathName);
 
-    const { label, setSchedule, scheduleJobInstance, indexHandler, router } = this.scheduleHandlerFactoryService.make(type, key, fetchData, minutes);
+    const { label, setSchedule, scheduleJobInstance, requestHandler } = this.scheduleHandlerFactoryService.make(type, key, fetchData, minutes);
 
     return {
       label,
+      pathName,
       fetchData,
       setSchedule,
       scheduleJobInstance,
-      indexHandler,
-      pathName,
-      router,
+      requestHandler,
     };
   }
 }

@@ -6,3 +6,11 @@ export const scheduleStorageDto: StorageDto = {
   emptyValue: `[]`,
 };
 
+export class ScheduleInfoDto {
+  label: string;
+  pathName: string;
+  fetchData: any;
+  setSchedule: any;
+  scheduleJobInstance: any;
+  requestHandler: any;
+}
