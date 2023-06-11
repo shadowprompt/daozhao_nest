@@ -44,7 +44,7 @@ export class ScheduleHandlerFactoryService {
         dLog(`---查询${label}失败`, err);
         return {
           success: false,
-          errMsg: err.errMsg
+          errMsg: err.message,
         };
       });
     }
