@@ -3,20 +3,15 @@ import { HMSService } from "./HMS.service";
 
 @Controller('/HMS')
 export class HMSController {
-  private scheduleInfo: { setSchedule: any; scheduleJobInstance: any; requestHandler: (requestBody) => any; label: any };
-  constructor(private readonly hmsService: HMSService) {
-    this.scheduleInfo = this.hmsService.make();
-  }
+  constructor(private readonly hmsService: HMSService) {}
   @Get()
   async set(@Query() query) {
-    return this.scheduleInfo.requestHandler({
-      isDirect: true,
-    });
+    return this.hmsService.scheduleInfo.requestHandler(query);
   }
   // 获取当前schedule的下次触发时间
   @Get('/list')
   async get(@Query() query) {
-    const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
+    const scheduleJobInstance = this.hmsService.scheduleInfo.scheduleJobInstance.getInstance();
     return {
       nextUpdateTime: scheduleJobInstance && scheduleJobInstance.nextInvocation() || 0,
     };

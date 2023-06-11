@@ -3,20 +3,15 @@ import { WeixinService } from "./weixin.service";
 
 @Controller('/weixin')
 export class WeixinController {
-  private scheduleInfo: { setSchedule: any; scheduleJobInstance: any; requestHandler: (requestBody) => any; label: any };
-  constructor(private readonly weixinService: WeixinService) {
-    this.scheduleInfo = this.weixinService.make();
-  }
+  constructor(private readonly weixinService: WeixinService) {}
   @Get()
   async set(@Query() query) {
-    return this.scheduleInfo.requestHandler({
-      isDirect: true,
-    });
+    return this.weixinService.scheduleInfo.requestHandler(query);
   }
   // 获取当前schedule的下次触发时间
   @Get('/list')
   async get(@Query() query) {
-    const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
+    const scheduleJobInstance = this.weixinService.scheduleInfo.scheduleJobInstance.getInstance();
     return {
       nextUpdateTime: scheduleJobInstance && scheduleJobInstance.nextInvocation() || 0,
     };
