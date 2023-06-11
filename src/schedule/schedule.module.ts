@@ -7,6 +7,9 @@ import { ScheduleFactoryService } from "./scheduleFactory.service";
 import { ScheduleHandlerFactoryService } from "./scheduleHandlerFactory.service";
 import { scheduleStorageDto } from "./dto/schedule.dto";
 
+import { WeixinController } from './weixin.controller';
+import { WeixinService } from './weixin.service';
+
 @Module({})
 export class ScheduleModule {
   static register(options: Record<string, any>): DynamicModule {
@@ -17,7 +20,7 @@ export class ScheduleModule {
 
     return {
       module: ScheduleModule,
-      controllers: controllers,
+      controllers: controllers.concat(WeixinController),
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
@@ -27,9 +30,17 @@ export class ScheduleModule {
         UpdateListService,
         ScheduleService,
         ScheduleFactoryService,
-        ScheduleHandlerFactoryService
+        ScheduleHandlerFactoryService,
+        WeixinService,
       ],
-      exports: [VersionService, UpdateListService, ScheduleService, ScheduleFactoryService, ScheduleHandlerFactoryService],
+      exports: [
+        VersionService,
+        UpdateListService,
+        ScheduleService,
+        ScheduleFactoryService,
+        ScheduleHandlerFactoryService,
+        WeixinService
+      ],
     };
   }
 }
