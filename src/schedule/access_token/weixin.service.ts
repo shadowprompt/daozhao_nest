@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 
 import { AccessTokenFactoryService } from "./accessTokenFactory.service";
 import { weixinAccessTokenDto } from "../dto/schedule.dto";
-import { AutoStartService } from "./AutoStart.service";
 const {WXMIN_APPID, WXMIN_APPSECRET, WXMIN_API_URL, DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
 
 const params = {
@@ -12,10 +11,9 @@ const params = {
 };
 
 @Injectable()
-export class WeixinService extends AutoStartService{
+export class WeixinService {
   public scheduleInfo;
   constructor(private readonly accessTokenServiceFactoryService: AccessTokenFactoryService) {
-    super();
     this.scheduleInfo = this.make();
   }
   make() {

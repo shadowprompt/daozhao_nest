@@ -16,7 +16,7 @@ export class ScheduleHandlerFactoryService {
   ) {
     this.httpAdapter = this.adapterHost?.httpAdapter;
   }
-  make(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto, fetchData) {
+  make(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto, fetchData, defaultScheduleMinutes = 60) {
 
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
@@ -31,7 +31,7 @@ export class ScheduleHandlerFactoryService {
         // 从localStorage动态获取最新的配置
         const list = that.updateListService.get(scheduleStorageDto)
         const target = list.find(item => item.type === accessTokenScheduleInfoDto.type && item.key === accessTokenScheduleInfoDto.key);
-        const scheduleMinutes = target && target.scheduleMinutes || accessTokenScheduleInfoDto.scheduleMinutes;
+        const scheduleMinutes = target && target.scheduleMinutes || accessTokenScheduleInfoDto.scheduleMinutes || defaultScheduleMinutes;
 
         const instance = setSchedule(scheduleMinutes);
 

@@ -1,9 +1,14 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { HMS_webPushService } from "./HMS_webPush.service";
+import { AutoStart } from "./AutoStart";
 
 @Controller('/HMS_webPush')
-export class HMS_webPushController {
-  constructor(private readonly hms_webPushService: HMS_webPushService) {}
+export class HMS_webPushController extends AutoStart {
+  constructor(private readonly hms_webPushService: HMS_webPushService) {
+    super();
+    this.scheduleInfo = this.hms_webPushService.make();
+
+  }
   @Get()
   async set(@Query() query) {
     return this.hms_webPushService.scheduleInfo.requestHandler(query);

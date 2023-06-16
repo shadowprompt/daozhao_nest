@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { AccessTokenFactoryService } from "./accessTokenFactory.service";
-import { HMSAccessTokenDto, ScheduleInfoDto } from "../dto/schedule.dto";
-import { AutoStartService } from "./AutoStart.service";
+import { HMSAccessTokenDto } from "../dto/schedule.dto";
 
 const qs = require('querystring');
 const {HMS_CLIENT_ID, HMS_CLIENT_SECRET, HMS_API_URL, DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
@@ -13,10 +12,9 @@ const params = {
 };
 
 @Injectable()
-export class HMSService extends AutoStartService {
+export class HMSService {
   public scheduleInfo;
   constructor(private readonly accessTokenServiceFactoryService: AccessTokenFactoryService) {
-    super();
     this.scheduleInfo = this.make();
   }
 

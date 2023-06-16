@@ -1,9 +1,13 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { WeixinService } from "./weixin.service";
+import { AutoStart } from "./AutoStart";
 
 @Controller('/weixin')
-export class WeixinController {
-  constructor(private readonly weixinService: WeixinService) {}
+export class WeixinController extends AutoStart {
+  constructor(private readonly weixinService: WeixinService) {
+    super();
+    this.scheduleInfo = this.weixinService.make();
+  }
   @Get()
   async set(@Query() query) {
     return this.weixinService.scheduleInfo.requestHandler(query);

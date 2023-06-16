@@ -3,6 +3,7 @@ import { UpdateListService } from "../common/service/storage/updateList.service"
 import { ScheduleInfoDto, scheduleStorageDto } from "./dto/schedule.dto";
 import { StorageListItemDto } from "../common/dto/storage.dto";
 import { ScheduleService } from "./schedule.service";
+import { AutoStart } from "./access_token/AutoStart";
 
 @Controller('/schedule')
 export class ScheduleController {
@@ -27,9 +28,10 @@ export class ScheduleController {
 
 export function ScheduleControllerMaker(storageListItemDto: StorageListItemDto): Type<any> {
   @Controller()
-  class ScheduleController {
-    private scheduleInfo: ScheduleInfoDto;
+  class ScheduleController extends AutoStart {
+    public scheduleInfo: ScheduleInfoDto;
     constructor(private scheduleService: ScheduleService) {
+      super();
       this.scheduleInfo = this.scheduleService.make(storageListItemDto);
     }
 

@@ -9,8 +9,7 @@ const { DAOZHAO_CRAWL_SERVER, EXAM_SCHEDULE_MINUTES  } = require('@daozhao/confi
 @Injectable()
 export class ScheduleService {
   public scheduleInfo;
-  constructor(private scheduleHandlerFactoryService: ScheduleHandlerFactoryService) {
-  }
+  constructor(private scheduleHandlerFactoryService: ScheduleHandlerFactoryService) {}
 
   make(handler: StorageListItemDto) {
     const type = handler.type || 'STORE_TYPE';

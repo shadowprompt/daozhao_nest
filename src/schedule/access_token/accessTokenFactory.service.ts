@@ -29,9 +29,8 @@ export class AccessTokenFactoryService {
         let expires_in = 0;
         let access_token;
         if (oldAccessToken) {
-          const accessTokenObj = JSON.parse(oldAccessToken);
-          expires_in = accessTokenObj.expires_in;
-          access_token = accessTokenObj.access_token;
+          expires_in = oldAccessToken.expires_in;
+          access_token = oldAccessToken.access_token;
         }
         if (expires_in && expires_in - Date.now()) {
           resolve({

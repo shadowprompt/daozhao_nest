@@ -1,9 +1,13 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { HMSService } from "./HMS.service";
+import { AutoStart } from "./AutoStart";
 
 @Controller('/HMS')
-export class HMSController {
-  constructor(private readonly hmsService: HMSService) {}
+export class HMSController extends AutoStart {
+  constructor(private readonly hmsService: HMSService) {
+    super();
+    this.scheduleInfo = this.hmsService.make();
+  }
   @Get()
   async set(@Query() query) {
     return this.hmsService.scheduleInfo.requestHandler(query);
