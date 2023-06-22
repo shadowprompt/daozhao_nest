@@ -15,3 +15,7 @@ export class StorageListItemDto {
   scheduleMinutes: number
   _expire: boolean
 }
+
+export class StorageListUpdaterDto {
+  list: StorageListItemDto[]
+}

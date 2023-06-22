@@ -128,6 +128,7 @@ export class AccessTokenFactoryService {
         });
     }
 
+    // 仅使用ScheduleHandlerFactoryService中make的schedule功能，并不使用其requestHandler等功能
     const { setSchedule, scheduleJobInstance } = this.scheduleHandlerFactoryService.make(accessTokenScheduleInfoDto, fetchAccessToken);
 
     return {

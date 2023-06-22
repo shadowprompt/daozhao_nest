@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query, Type } from "@nestjs/common";
 import { UpdateListService } from "../common/service/storage/updateList.service";
 import { ScheduleInfoDto, scheduleStorageDto } from "./dto/schedule.dto";
-import { StorageListItemDto } from "../common/dto/storage.dto";
+import { StorageListItemDto, StorageListUpdaterDto } from "../common/dto/storage.dto";
 import { ScheduleService } from "./schedule.service";
 import { AutoStart } from "./access_token/AutoStart";
 
@@ -13,16 +13,24 @@ export class ScheduleController {
   ) {
   }
 
+  // 返回schedule列表信息
   @Get()
   getList(@Query() query): Object {
     return this.updateListService.get(scheduleStorageDto)
   }
 
-  // 更新单个schedule信息
+  // 更新schedule列表信息
   @Post()
-  updateItem(@Body() storageListItemDto: StorageListItemDto): Object {
-    this.updateListService.set(scheduleStorageDto, [storageListItemDto]);
-    return this.scheduleService.make(storageListItemDto);
+  updateList(@Body() body: StorageListUpdaterDto): object {
+    const result =  this.updateListService.set(scheduleStorageDto, body.list);
+    const { list, newList } = result;
+    newList.forEach(item => {
+      // 生成Controller，触发requestHandler
+      const ControllerClass = ScheduleControllerMaker(item);
+      const controller = new ControllerClass(this.scheduleService)
+      controller.scheduleInfo.requestHandler({});
+    });
+    return list;
   }
 }
 
