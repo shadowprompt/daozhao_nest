@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, Post, Body } from "@nestjs/common";
 import { WeixinService } from "./weixin.service";
 import { AutoStart } from "./AutoStart";
 
@@ -8,9 +8,9 @@ export class WeixinController extends AutoStart {
     super();
     this.scheduleInfo = this.weixinService.make();
   }
-  @Get()
-  async set(@Query() query) {
-    return this.weixinService.scheduleInfo.requestHandler(query);
+  @Post()
+  async set(@Body() body) {
+    return this.weixinService.scheduleInfo.requestHandler(body);
   }
   // 获取当前schedule的下次触发时间
   @Get('/list')

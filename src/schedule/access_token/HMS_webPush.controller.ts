@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, Post, Body } from "@nestjs/common";
 import { HMS_webPushService } from "./HMS_webPush.service";
 import { AutoStart } from "./AutoStart";
 
@@ -9,9 +9,9 @@ export class HMS_webPushController extends AutoStart {
     this.scheduleInfo = this.hms_webPushService.make();
 
   }
-  @Get()
-  async set(@Query() query) {
-    return this.hms_webPushService.scheduleInfo.requestHandler(query);
+  @Post()
+  async set(@Body() body) {
+    return this.hms_webPushService.scheduleInfo.requestHandler(body);
   }
   // 获取当前schedule的下次触发时间
   @Get('/list')

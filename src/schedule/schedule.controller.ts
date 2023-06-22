@@ -35,9 +35,9 @@ export function ScheduleControllerMaker(storageListItemDto: StorageListItemDto):
       this.scheduleInfo = this.scheduleService.make(storageListItemDto);
     }
 
-    @Get([storageListItemDto.pathName])
-    async set(@Query() query) {
-      return this.scheduleInfo.requestHandler(query);
+    @Post([storageListItemDto.pathName])
+    async set(@Body() body) {
+      return this.scheduleInfo.requestHandler(body);
     }
     // 获取当前schedule的下次触发时间
     @Get([storageListItemDto.pathName + '/list'])

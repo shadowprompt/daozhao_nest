@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, Post, Body } from "@nestjs/common";
 import { HMSService } from "./HMS.service";
 import { AutoStart } from "./AutoStart";
 
@@ -8,9 +8,9 @@ export class HMSController extends AutoStart {
     super();
     this.scheduleInfo = this.hmsService.make();
   }
-  @Get()
-  async set(@Query() query) {
-    return this.hmsService.scheduleInfo.requestHandler(query);
+  @Post()
+  async set(@Body() body) {
+    return this.hmsService.scheduleInfo.requestHandler(body);
   }
   // 获取当前schedule的下次触发时间
   @Get('/list')
