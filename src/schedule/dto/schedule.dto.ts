@@ -35,6 +35,7 @@ export class ScheduleInfoDto {
   pathName: string;
   fetchData: any;
   setSchedule: any;
+  cancelSchedule: any;
   scheduleJobInstance: any;
   requestHandler: any;
 }

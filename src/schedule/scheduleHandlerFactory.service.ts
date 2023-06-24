@@ -20,7 +20,7 @@ export class ScheduleHandlerFactoryService {
 
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
-    const { setSchedule, scheduleJobInstance } = this.scheduleFactoryService.make(accessTokenScheduleInfoDto, fetchData);
+    const { setSchedule, scheduleJobInstance, cancelSchedule } = this.scheduleFactoryService.make(accessTokenScheduleInfoDto, fetchData);
 
     const that = this;
 
@@ -52,6 +52,7 @@ export class ScheduleHandlerFactoryService {
     return {
       label,
       setSchedule,
+      cancelSchedule,
       scheduleJobInstance,
       requestHandler,
     }

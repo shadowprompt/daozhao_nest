@@ -29,9 +29,7 @@ export class ScheduleFactoryService {
     function setSchedule(minutes) {
       dLog(`===更新 ${label} 定时任务 -> `);
       const nextTime = Date.now() + minutes * 60 * 1000;
-      if (scheduleJobInstance.getInstance()) {
-        scheduleJobInstance.getInstance().cancel();
-      }
+      cancelSchedule();
 
       scheduleJobInstance.setInstance(
         nodeSchedule.scheduleJob(nextTime, () => {
@@ -44,9 +42,16 @@ export class ScheduleFactoryService {
       return scheduleJobInstance.getInstance();
     }
 
+    function cancelSchedule() {
+      if (scheduleJobInstance.getInstance()) {
+        scheduleJobInstance.getInstance().cancel();
+      }
+    }
+
     return {
       label,
       setSchedule,
+      cancelSchedule,
       scheduleJobInstance,
     }
   }
