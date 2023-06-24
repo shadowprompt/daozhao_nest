@@ -5,7 +5,7 @@ import { StorageListItemDto, StorageListUpdaterDto } from "../common/dto/storage
 import { ScheduleService } from "./schedule.service";
 import { AutoStart } from "./access_token/AutoStart";
 
-@Controller('/schedule')
+@Controller('/handlers')
 export class ScheduleController {
   constructor(
     private readonly updateListService: UpdateListService,
