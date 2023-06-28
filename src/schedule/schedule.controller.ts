@@ -1,4 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query, Type } from "@nestjs/common";
+const {DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
+import { axios } from "../utils/index";
+
 import { UpdateListService } from "../common/service/storage/updateList.service";
 import { ScheduleInfoDto, scheduleStorageDto } from "./dto/schedule.dto";
 import { StorageListItemDto, StorageListUpdaterDto } from "../common/dto/storage.dto";
@@ -23,13 +26,20 @@ export class ScheduleController {
   @Post()
   updateList(@Body() body: StorageListUpdaterDto): object {
     const result =  this.updateListService.set(scheduleStorageDto, body.list);
-    const { list, newList } = result;
+    const { list, newList, deleteList } = result;
     newList.forEach(item => {
       // 生成Controller，触发requestHandler
       const ControllerClass = ScheduleControllerMaker(item);
       const controller = new ControllerClass(this.scheduleService)
       controller.scheduleInfo.requestHandler({});
     });
+    deleteList.forEach(it => {
+      axios.get(DAOZHAO_SCHEDULE_SERVER + it.pathName +  '/stop').then(() => {
+        console.log('stop success -> ', it.pathName);
+      }).catch(err => {
+        console.log('stop error -> ', it.pathName, err.message);
+      })
+    })
     return list;
   }
 }
@@ -53,6 +63,14 @@ export function ScheduleControllerMaker(storageListItemDto: StorageListItemDto):
       const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
       return {
         nextUpdateTime: scheduleJobInstance && scheduleJobInstance.nextInvocation() || 0,
+      };
+    }
+    // 终止schedule
+    @Get([storageListItemDto.pathName + '/stop'])
+    async stop(@Query() query) {
+      const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
+      return {
+        isCancelled: scheduleJobInstance && scheduleJobInstance.cancel(),
       };
     }
   }
