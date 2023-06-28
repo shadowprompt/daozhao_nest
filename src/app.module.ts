@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -16,7 +17,7 @@ import { ScheduleFactoryService } from './schedule/scheduleFactory.service';
 import { ScheduleHandlerFactoryService } from './schedule/scheduleHandlerFactory.service';
 
 @Module({
-  imports: [ScheduleModule.register({ folder: './config' })],
+  imports: [ConfigModule.forRoot({envFilePath: '.development.env',}), ScheduleModule.register({ folder: './config' })],
   // imports: [TestModule],
   controllers: [AppController, PostController, ScheduleController],
   providers: [AppService, VersionService, UpdateListService, PostService, ScheduleService, ScheduleFactoryService, ScheduleHandlerFactoryService],
