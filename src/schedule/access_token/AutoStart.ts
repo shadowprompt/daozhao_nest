@@ -4,8 +4,6 @@ import { OnModuleInit } from "@nestjs/common";
 export class AutoStart implements OnModuleInit {
   public scheduleInfo: any;
   onModuleInit(): any {
-    this.scheduleInfo.requestHandler({
-      isDirect: true,
-    });
+    this.scheduleInfo.requestHandler({});
   }
 }
