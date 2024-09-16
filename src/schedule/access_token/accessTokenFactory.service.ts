@@ -10,10 +10,11 @@ import { StorageDto } from "../../common/dto/storage.dto";
 export class AccessTokenFactoryService {
   constructor(private readonly scheduleHandlerFactoryService: ScheduleHandlerFactoryService) {
   }
-  make (accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto,
-    params,
-    httpError: (data) => string,
-    daozhaoUrl) {
+  make (
+    accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto,
+    params: any,
+    httpError: (data: any) => string,
+    daozhaoUrl: any) {
 
     const storage: StorageDto = {
       name: accessTokenScheduleInfoDto.type,

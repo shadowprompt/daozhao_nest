@@ -23,9 +23,10 @@ import { HMS_webPushService } from './access_token/HMS_webPush.service';
 @Module({})
 export class ScheduleModule {
   static register(options: Record<string, any>): DynamicModule {
+    // 读取storage存储的schedule列表
     const updateListService = new UpdateListService();
     const list = updateListService.get(scheduleStorageDto);
-    // 生成controller列表
+    // 根据schedule列表生成controller列表
     const controllers = list.map(item => ScheduleControllerMaker(item));
 
     return {

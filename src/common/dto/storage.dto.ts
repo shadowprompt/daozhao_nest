@@ -12,8 +12,9 @@ export class StorageListItemDto {
   key: string;
   serverUrl: string;
   pathName: string;
-  scheduleMinutes: number
-  _expire: boolean
+  scheduleMinutes: number;
+  _expire: boolean;
+  postData: object | undefined;
 }
 
 export class StorageListUpdaterDto {
