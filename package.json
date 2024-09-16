@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@daozhao/config": "^1.0.6",
+    "@daozhao/config": "^1.0.7",
     "@daozhao/utils": "^1.0.4",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.0.0",
