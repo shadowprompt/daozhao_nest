@@ -3,7 +3,7 @@ const {DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
 import { axios } from "../utils/index";
 
 import { UpdateListService } from "../common/service/storage/updateList.service";
-import { ScheduleInfoDto, scheduleStorageDto } from "./dto/schedule.dto";
+import { ScheduleInfoDto, scheduleStorageDto, storeData } from './dto/schedule.dto';
 import { StorageListItemDto, StorageListUpdaterDto } from "../common/dto/storage.dto";
 import { ScheduleService } from "./schedule.service";
 import { AutoStart } from "./access_token/AutoStart";
@@ -25,7 +25,7 @@ export class ScheduleController {
   // 更新schedule列表信息
   @Post()
   updateList(@Body() body: StorageListUpdaterDto): object {
-    const result =  this.updateListService.set(scheduleStorageDto, body.list);
+    const result: storeData =  this.updateListService.set(scheduleStorageDto, body.list);
     const { list, newList, deleteList } = result;
     newList.forEach(item => {
       // 生成Controller，触发requestHandler

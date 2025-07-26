@@ -23,7 +23,7 @@ export class AccessTokenFactoryService {
     }
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
-    const isAccessTokenValidated = () => {
+    const isAccessTokenValidated = () : Promise<null | object> => {
       return new Promise((resolve) => {
         dLog(`尝试从缓存取${label}`);
         const oldAccessToken = getLocalData(storage);
@@ -39,7 +39,7 @@ export class AccessTokenFactoryService {
             expires_in,
           });
         } else {
-          resolve({});
+          resolve(null);
         }
       });
     };

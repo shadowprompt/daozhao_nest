@@ -1,4 +1,4 @@
-import { StorageDto } from "../../common/dto/storage.dto";
+import { StorageDto, StorageListItemDto } from '../../common/dto/storage.dto';
 
 export const scheduleStorageDto: StorageDto = {
   name: 'schedule',
@@ -50,4 +50,10 @@ export class AccessTokenScheduleInfoDto {
   type: string;
   key: string;
   scheduleMinutes: number = 120
+}
+
+export class storeData {
+  list: Array<StorageListItemDto>;
+  newList: Array<StorageListItemDto>;
+  deleteList: Array<StorageListItemDto>;
 }
