@@ -12,6 +12,12 @@ export const weixinAccessTokenDto: AccessTokenScheduleInfoDto = {
   scheduleMinutes: 120,
 };
 
+export const weixinFitconverterAccessTokenDto: AccessTokenScheduleInfoDto = {
+  type: 'weixinFitconverter',
+  key: 'accessToken',
+  scheduleMinutes: 120,
+};
+
 export const HMSAccessTokenDto: AccessTokenScheduleInfoDto = {
   type: 'HMS',
   key: 'accessToken',

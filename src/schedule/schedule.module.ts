@@ -11,6 +11,9 @@ import { scheduleStorageDto } from "./dto/schedule.dto";
 import { WeixinController } from './access_token/weixin.controller';
 import { WeixinService } from './access_token/weixin.service';
 
+import { weixinFitconverterController } from './access_token/weixinFitconverter/weixinFitconverterController';
+import { weixinFitconverterService } from './access_token/weixinFitconverter/weixinFitconverterService';
+
 import { HMSController } from './access_token/HMS.controller';
 import { HMSService } from './access_token/HMS.service';
 
@@ -31,7 +34,7 @@ export class ScheduleModule {
 
     return {
       module: ScheduleModule,
-      controllers: controllers.concat(WeixinController, HMSController, HMS_HIController, HMS_webPushController),
+      controllers: controllers.concat(weixinFitconverterController, WeixinController, HMSController, HMS_HIController, HMS_webPushController),
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
@@ -44,6 +47,7 @@ export class ScheduleModule {
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
         WeixinService,
+        weixinFitconverterService,
         HMSService,
         HMS_HIService,
         HMS_webPushService,
@@ -56,6 +60,7 @@ export class ScheduleModule {
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
         WeixinService,
+        weixinFitconverterService,
         HMSService,
         HMS_HIService,
       ],

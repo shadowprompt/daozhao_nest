@@ -1,4 +1,6 @@
 import { NestFactory } from '@nestjs/core';
+require('dotenv').config()
+
 const { dLog } = require('@daozhao/utils');
 
 import { AppModule } from './app.module';
