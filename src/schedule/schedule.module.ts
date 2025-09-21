@@ -14,6 +14,9 @@ import { WeixinService } from './access_token/weixin.service';
 import { weixinFitconverterController } from './access_token/weixinFitconverter/weixinFitconverterController';
 import { weixinFitconverterService } from './access_token/weixinFitconverter/weixinFitconverterService';
 
+import { wxminFitconverterController } from './access_token/wxminFitconverter/wxminFitconverterController';
+import { wxminFitconverterService } from './access_token/wxminFitconverter/wxminFitconverterService';
+
 import { HMSController } from './access_token/HMS.controller';
 import { HMSService } from './access_token/HMS.service';
 
@@ -34,7 +37,7 @@ export class ScheduleModule {
 
     return {
       module: ScheduleModule,
-      controllers: controllers.concat(weixinFitconverterController, WeixinController, HMSController, HMS_HIController, HMS_webPushController),
+      controllers: controllers.concat(weixinFitconverterController, wxminFitconverterController, WeixinController, HMSController, HMS_HIController, HMS_webPushController),
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
@@ -48,6 +51,7 @@ export class ScheduleModule {
         AccessTokenFactoryService,
         WeixinService,
         weixinFitconverterService,
+        wxminFitconverterService,
         HMSService,
         HMS_HIService,
         HMS_webPushService,
@@ -61,6 +65,7 @@ export class ScheduleModule {
         AccessTokenFactoryService,
         WeixinService,
         weixinFitconverterService,
+        wxminFitconverterService,
         HMSService,
         HMS_HIService,
       ],
