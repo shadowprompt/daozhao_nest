@@ -60,7 +60,7 @@ export class AccessTokenFactoryService {
 
             const newAccessToken = {
               ...data,
-              expires_in: Date.now() + data.expires_in * 1000 - 60000, // 避免和官网服务器之前时间不一致，减少1分钟有效期
+              expires_in: Date.now() + data.expires_in * 1000 - 600000, // 避免和官网服务器之前时间不一致，减少10分钟有效期
             };
             setLocalData(storage, newAccessToken);
             resolve({
