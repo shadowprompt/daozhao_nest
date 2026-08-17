@@ -16,6 +16,16 @@ export class AppGalleryController {
     return this.appGalleryService.updateWatchedApps(body.list || []);
   }
 
+  @Post('/apps/add')
+  addApp(@Body() body: AppGalleryWatchedAppDto) {
+    return this.appGalleryService.addWatchedApp(body);
+  }
+
+  @Post('/apps/remove')
+  removeApp(@Body() body: { packageName: string }) {
+    return this.appGalleryService.removeWatchedApp(body.packageName);
+  }
+
   @Get('/search')
   searchApps(@Query('keyword') keyword: string) {
     return this.appGalleryService.searchApps(keyword);

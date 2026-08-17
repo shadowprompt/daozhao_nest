@@ -296,7 +296,62 @@ curl "http://localhost:5566/appgallery/search?keyword=微信"
 }
 ```
 
-### 更新监控应用列表
+### 追加单个应用到监控列表
+
+```bash
+curl -X POST http://localhost:5566/appgallery/apps/add \
+  -H "Content-Type: application/json" \
+  -d '{
+    "packageName": "com.tencent.wework",
+    "name": "企业微信"
+  }'
+```
+
+如果 `packageName` 已存在，会更新该项的 `name`，不会重复插入。
+
+返回示例：
+
+```json
+{
+  "app": {
+    "packageName": "com.tencent.wework",
+    "name": "企业微信"
+  },
+  "list": [
+    {
+      "packageName": "com.tencent.mm",
+      "name": "微信"
+    },
+    {
+      "packageName": "com.tencent.wework",
+      "name": "企业微信"
+    }
+  ],
+  "isNew": true
+}
+```
+
+追加后可以手动触发一次扫描，建立该应用的版本基线：
+
+```bash
+curl -X POST http://localhost:5566/appgallery/scan \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+### 移除单个监控应用
+
+```bash
+curl -X POST http://localhost:5566/appgallery/apps/remove \
+  -H "Content-Type: application/json" \
+  -d '{
+    "packageName": "com.tencent.wework"
+  }'
+```
+
+### 整体更新监控应用列表
+
+注意：该接口会整体覆盖当前监控列表。只想新增单个应用时，优先使用 `/appgallery/apps/add`。
 
 ```bash
 curl -X POST http://localhost:5566/appgallery/apps \

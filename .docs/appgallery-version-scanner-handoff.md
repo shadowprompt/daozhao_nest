@@ -101,6 +101,29 @@ curl -X POST http://localhost:5566/appgallery/apps \
   }'
 ```
 
+追加单个应用到监控列表：
+
+```bash
+curl -X POST http://localhost:5566/appgallery/apps/add \
+  -H "Content-Type: application/json" \
+  -d '{
+    "packageName": "com.tencent.wework",
+    "name": "企业微信"
+  }'
+```
+
+如果 `packageName` 已存在，会更新该项的 `name`，不会重复插入。
+
+移除单个监控应用：
+
+```bash
+curl -X POST http://localhost:5566/appgallery/apps/remove \
+  -H "Content-Type: application/json" \
+  -d '{
+    "packageName": "com.tencent.wework"
+  }'
+```
+
 检查某个包名是否已监控：
 
 ```bash
@@ -260,10 +283,8 @@ version: 8.0.76
 
 1. 新增通知能力：当 `changed` 非空时发送企业微信、邮件或 webhook。
 2. 新增历史记录：目前只保留最新快照和最近一次扫描结果，没有保存每次变更历史。
-3. 新增单个应用加入监控接口：当前更新列表需要整体提交 `list`。
-4. 新增删除单个应用接口。
-5. 新增扫描并只返回变更的轻量接口。
-6. 如果部署多实例，建议把 `node-localstorage` 换成 Redis 或数据库，避免多实例状态不一致。
+3. 新增扫描并只返回变更的轻量接口。
+4. 如果部署多实例，建议把 `node-localstorage` 换成 Redis 或数据库，避免多实例状态不一致。
 
 ## 注意事项
 

@@ -56,6 +56,48 @@ export class AppGalleryService implements OnModuleInit {
     return normalizedList;
   }
 
+  addWatchedApp(app: AppGalleryWatchedAppDto) {
+    const packageName = app && app.packageName && app.packageName.trim();
+    if (!packageName) {
+      throw new Error('packageName is required');
+    }
+
+    const list = this.getWatchedApps();
+    const targetIndex = list.findIndex(item => item.packageName === packageName);
+    const normalizedApp = {
+      packageName,
+      name: app.name,
+    };
+
+    if (targetIndex >= 0) {
+      list[targetIndex] = {
+        ...list[targetIndex],
+        ...normalizedApp,
+      };
+    } else {
+      list.push(normalizedApp);
+    }
+
+    setLocalData(appGalleryWatchedAppsStorage, list);
+    return {
+      app: normalizedApp,
+      list,
+      isNew: targetIndex < 0,
+    };
+  }
+
+  removeWatchedApp(packageName: string) {
+    const list = this.getWatchedApps();
+    const newList = list.filter(item => item.packageName !== packageName);
+
+    setLocalData(appGalleryWatchedAppsStorage, newList);
+    return {
+      packageName,
+      isRemoved: newList.length !== list.length,
+      list: newList,
+    };
+  }
+
   isWatched(packageName: string) {
     const target = this.getWatchedApps().find(item => item.packageName === packageName);
 
