@@ -220,3 +220,176 @@ GET  /handlers/run/:type/:key/stop
 ```
 
 这样新增 handler 时不需要动态注册 Nest Controller，也不需要重启服务才能出现新路由。
+
+## AppGallery 应用版本扫描
+
+AppGallery 扫描服务用于定期检查华为应用市场中主流应用的版本变化。服务启动后会自动扫描一次，并设置下一次定时扫描。
+
+默认扫描周期是 360 分钟，可以通过环境变量调整：
+
+```bash
+APPGALLERY_SCAN_MINUTES=360
+```
+
+默认详情接口是：
+
+```bash
+APPGALLERY_APPINFO_URL=https://web-drcn.hispace.dbankcloud.com/edge/webedge/appinfo
+```
+
+### 查看监控应用列表
+
+```bash
+curl http://localhost:5566/appgallery/apps
+```
+
+默认监控列表包含微信、QQ、支付宝、抖音、淘宝、京东、微博、百度、高德地图、QQ浏览器、网易云音乐、QQ音乐。
+
+### 检查某个包名是否在监控列表
+
+```bash
+curl http://localhost:5566/appgallery/apps/com.tencent.mm/watched
+```
+
+返回示例：
+
+```json
+{
+  "packageName": "com.tencent.mm",
+  "isWatched": true,
+  "app": {
+    "packageName": "com.tencent.mm",
+    "name": "微信"
+  }
+}
+```
+
+### 按应用名搜索包名
+
+```bash
+curl "http://localhost:5566/appgallery/search?keyword=微信"
+```
+
+返回结果中的 `packageName` 就是后续监控和查询版本时要使用的包名。
+
+返回示例：
+
+```json
+{
+  "keyword": "微信",
+  "suggestions": [
+    "企业微信",
+    "微信读书"
+  ],
+  "apps": [
+    {
+      "appId": "C5683",
+      "packageName": "com.tencent.mm",
+      "name": "微信",
+      "version": "8.0.76",
+      "kindName": "社交通讯",
+      "memo": "微信，是一个生活方式。",
+      "detailUrl": "https://appgallery.huawei.com/app/C5683",
+      "isWatched": true
+    }
+  ]
+}
+```
+
+### 更新监控应用列表
+
+```bash
+curl -X POST http://localhost:5566/appgallery/apps \
+  -H "Content-Type: application/json" \
+  -d '{
+    "list": [
+      {
+        "packageName": "com.tencent.mm",
+        "name": "微信"
+      },
+      {
+        "packageName": "com.eg.android.AlipayGphone",
+        "name": "支付宝"
+      }
+    ]
+  }'
+```
+
+### 手动触发扫描
+
+```bash
+curl -X POST http://localhost:5566/appgallery/scan \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
+
+首次扫描会建立本地版本基线，不会把所有应用都当成版本更新。后续扫描会对比本地快照里的 `version` 和 `versionCode`。
+
+返回示例：
+
+```json
+{
+  "success": true,
+  "scannedAt": 1787000000000,
+  "total": 2,
+  "changed": [
+    {
+      "packageName": "com.tencent.mm",
+      "name": "微信",
+      "oldVersion": "8.0.75",
+      "oldVersionCode": 3139,
+      "newVersion": "8.0.76",
+      "newVersionCode": 3141,
+      "detailUrl": "https://appgallery.huawei.com/app/C5683",
+      "updatedAt": 1787000000000
+    }
+  ],
+  "unchanged": [],
+  "failed": [],
+  "isStartup": false,
+  "isSchedule": false,
+  "nextUpdateTime": "2026-08-18T10:30:00.000Z"
+}
+```
+
+### 查看最近一次扫描结果
+
+```bash
+curl http://localhost:5566/appgallery/versions
+```
+
+### 查询单个应用当前版本
+
+```bash
+curl http://localhost:5566/appgallery/apps/com.tencent.mm/version
+```
+
+如果本地已有扫描快照，会直接返回快照中的版本信息；如果没有快照，会实时请求 AppGallery 详情接口。
+
+返回示例：
+
+```json
+{
+  "appId": "C5683",
+  "packageName": "com.tencent.mm",
+  "name": "微信",
+  "version": "8.0.76",
+  "versionCode": 3141,
+  "developerName": "腾讯科技（北京）有限公司",
+  "detailUrl": "https://appgallery.huawei.com/app/C5683",
+  "updatedAt": 1787000000000,
+  "_source": "local snapshot"
+}
+```
+
+### 查看下一次扫描时间
+
+```bash
+curl http://localhost:5566/appgallery/list
+```
+
+### 停止定时扫描
+
+```bash
+curl http://localhost:5566/appgallery/stop
+```

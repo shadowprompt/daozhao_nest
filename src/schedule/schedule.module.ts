@@ -8,13 +8,15 @@ import { AccessTokenFactoryService } from './access_token/accessTokenFactory.ser
 import { ScheduleController } from "./schedule.controller";
 import { AccessTokenController } from "./access_token/accessToken.controller";
 import { AccessTokenRegistryService } from "./access_token/accessTokenRegistry.service";
+import { AppGalleryController } from "./appgallery/appgallery.controller";
+import { AppGalleryService } from "./appgallery/appgallery.service";
 
 @Module({})
 export class ScheduleModule {
   static register(options: Record<string, any>): DynamicModule {
     return {
       module: ScheduleModule,
-      controllers: [ScheduleController, AccessTokenController],
+      controllers: [ScheduleController, AccessTokenController, AppGalleryController],
       providers: [
         {
           provide: 'CONFIG_OPTIONS',
@@ -27,6 +29,7 @@ export class ScheduleModule {
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
         AccessTokenRegistryService,
+        AppGalleryService,
       ],
       exports: [
         VersionService,
@@ -36,6 +39,7 @@ export class ScheduleModule {
         ScheduleHandlerFactoryService,
         AccessTokenFactoryService,
         AccessTokenRegistryService,
+        AppGalleryService,
       ],
     };
   }
