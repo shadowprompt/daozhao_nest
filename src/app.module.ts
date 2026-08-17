@@ -11,15 +11,11 @@ import { PostService } from './post/service/post.service';
 
 
 import { ScheduleModule } from './schedule/schedule.module';
-import { ScheduleController } from './schedule/schedule.controller';
-import { ScheduleService } from './schedule/schedule.service';
-import { ScheduleFactoryService } from './schedule/scheduleFactory.service';
-import { ScheduleHandlerFactoryService } from './schedule/scheduleHandlerFactory.service';
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.development.env',}), ScheduleModule.register({ folder: './config' })],
   // imports: [TestModule],
-  controllers: [AppController, PostController, ScheduleController],
-  providers: [AppService, VersionService, UpdateListService, PostService, ScheduleService, ScheduleFactoryService, ScheduleHandlerFactoryService],
+  controllers: [AppController, PostController],
+  providers: [AppService, VersionService, UpdateListService, PostService],
 })
 export class AppModule {}

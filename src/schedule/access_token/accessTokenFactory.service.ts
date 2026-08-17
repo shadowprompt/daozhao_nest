@@ -1,9 +1,14 @@
-import { axios, getLocalData, nodeStore, setLocalData } from "../../utils/index";
+import { axios, getLocalData, setLocalData } from "../../utils/index";
 const { dLog } = require('@daozhao/utils');
 import { AccessTokenScheduleInfoDto } from "../dto/schedule.dto";
 import { Injectable } from "@nestjs/common";
 import { ScheduleHandlerFactoryService } from "../scheduleHandlerFactory.service";
 import { StorageDto } from "../../common/dto/storage.dto";
+
+type AccessTokenResult = {
+  accessToken: any;
+  _source: string;
+};
 
 // 完成对官网接口请求的组装任务
 @Injectable()
@@ -23,85 +28,79 @@ export class AccessTokenFactoryService {
     }
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
 
-    const isAccessTokenValidated = () : Promise<null | object> => {
-      return new Promise((resolve) => {
-        dLog(`尝试从缓存取${label}`);
-        const oldAccessToken = getLocalData(storage);
-        let expires_in = 0;
-        let access_token;
-        if (oldAccessToken) {
-          expires_in = oldAccessToken.expires_in;
-          access_token = oldAccessToken.access_token;
-        }
-        if (expires_in && expires_in - Date.now()) {
-          resolve({
-            access_token,
-            expires_in,
-          });
-        } else {
-          resolve(null);
-        }
-      });
+    const isAccessTokenValidated = () : null | object => {
+      dLog(`尝试从缓存取${label}`);
+      const oldAccessToken = getLocalData(storage);
+      const expires_in = oldAccessToken && oldAccessToken.expires_in;
+
+      if (expires_in && expires_in > Date.now()) {
+        return oldAccessToken;
+      }
+
+      return null;
     };
 
-    const fetchAccessToken = (requestBody) => {
-      return new Promise(async (resolve, reject) => {
-        const queryAccessTokenFromOfficial = () => {
-          dLog(`直接官网请求${label}`);
-          // 更加params实现各自官网请求access_token流程
-          axios(params).then((response) => {
-            const data = response.data || {};
-            const errMsg = httpError(data);
-            if (errMsg) {
-              return reject({
-                errMsg,
-              })
-            }
+    const fetchAccessToken = async (requestBody: any = {}): Promise<AccessTokenResult> => {
+      const queryAccessTokenFromOfficial = async () => {
+        dLog(`直接官网请求${label}`);
+        try {
+          const response = await axios(params);
+          const data = response.data || {};
+          const errMsg = httpError(data);
+          if (errMsg) {
+            throw {
+              errMsg,
+            };
+          }
 
-            const newAccessToken = {
-              ...data,
-              expires_in: Date.now() + data.expires_in * 1000 - 600000, // 避免和官网服务器之前时间不一致，减少10分钟有效期
-            };
-            setLocalData(storage, newAccessToken);
-            resolve({
-              accessToken: newAccessToken,
-              _source: 'official',
-            });
-          }).catch((err) => {
-            const msg = {
-              errMsg: `官网请求${label}失败：${err.message}`,
-            };
-            return reject(msg);
-          });
+          const newAccessToken = {
+            ...data,
+            expires_in: Date.now() + data.expires_in * 1000 - 600000, // 避免和官网服务器时间不一致，减少10分钟有效期
+          };
+          setLocalData(storage, newAccessToken);
+          return {
+            accessToken: newAccessToken,
+            _source: 'official',
+          };
+        } catch (err) {
+          throw {
+            errMsg: err.errMsg || `官网请求${label}失败：${err.message}`,
+          };
+        }
+      };
+
+      const queryAccessTokenFromDaozhao = async () => {
+        try {
+          const res = await axios.post(daozhaoUrl);
+          const data = res.data;
+          return {
+            accessToken: data.accessToken,
+            _source: 'Daozhao',
+          };
+        } catch (err) {
+          throw {
+            errMsg: `Daozhao代理请求${label}失败：${err.message}`,
+          };
+        }
+      }
+
+      const isDirect = requestBody.isDirect;
+      // 用isDirect=true，直接走官网请求
+      if (isDirect) {
+        return queryAccessTokenFromOfficial();
+      } else if (process.env.NODE_ENV === 'development' ) {
+        return queryAccessTokenFromDaozhao();
+      }
+
+      const oldAccessToken = isAccessTokenValidated();
+      if (oldAccessToken) {
+        return {
+          accessToken: oldAccessToken,
+          _source: 'local cache',
         };
+      }
 
-        const queryAccessTokenFromDaozhao = () => {
-          axios.post(daozhaoUrl).then(res => {
-            const data = res.data;
-            resolve({
-              accessToken: data.accessToken,
-              _source: 'Daozhao',
-            })
-          })
-        }
-
-        const isDirect = requestBody.isDirect;
-        // 用isDirect=true，直接走官网请求
-        if (isDirect) {
-          return queryAccessTokenFromOfficial();
-        } else if (process.env.NODE_ENV === 'development' ) {
-          return queryAccessTokenFromDaozhao();
-        }
-        const oldAccessToken = await isAccessTokenValidated();
-        if (oldAccessToken) {
-          resolve({
-            accessToken: oldAccessToken,
-            _source: 'local cache',
-          });
-        } else {
-          queryAccessTokenFromOfficial();
-        }
-      });
+      return queryAccessTokenFromOfficial();
     };
 
     function requestHandler(requestBody) {

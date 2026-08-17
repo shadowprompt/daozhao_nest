@@ -1,19 +1,28 @@
-import { Body, Controller, Get, Param, Post, Query, Type } from "@nestjs/common";
-const {DAOZHAO_SCHEDULE_SERVER} = require('@daozhao/config');
-import { axios } from "../utils/index";
+import { Body, Controller, Get, NotFoundException, OnModuleInit, Param, Post, Query } from "@nestjs/common";
 
 import { UpdateListService } from "../common/service/storage/updateList.service";
 import { ScheduleInfoDto, scheduleStorageDto, storeData } from './dto/schedule.dto';
 import { StorageListItemDto, StorageListUpdaterDto } from "../common/dto/storage.dto";
 import { ScheduleService } from "./schedule.service";
-import { AutoStart } from "./access_token/AutoStart";
 
 @Controller('/handlers')
-export class ScheduleController {
+export class ScheduleController implements OnModuleInit {
   constructor(
     private readonly updateListService: UpdateListService,
     private readonly scheduleService: ScheduleService,
   ) {
+  }
+
+  onModuleInit() {
+    const list = this.updateListService.get(scheduleStorageDto);
+    list.forEach(item => {
+      Promise.resolve().then(async () => {
+        // 服务启动后恢复已保存handler的定时链路。
+        await this.scheduleService.make(item).requestHandler({});
+      }).catch(err => {
+        console.log('handler auto start error -> ', item.pathName, err.message);
+      });
+    });
   }
 
   // 返回schedule列表信息
@@ -28,51 +37,48 @@ export class ScheduleController {
     const result: storeData =  this.updateListService.set(scheduleStorageDto, body.list);
     const { list, newList, deleteList } = result;
     newList.forEach(item => {
-      // 生成Controller，触发requestHandler
-      const ControllerClass = ScheduleControllerMaker(item);
-      const controller = new ControllerClass(this.scheduleService)
-      controller.scheduleInfo.requestHandler({});
+      // 新增或更新handler后立即触发一次，后续由固定路由按type/key分发。
+      this.scheduleService.make(item).requestHandler({});
     });
     deleteList.forEach(it => {
-      axios.get(DAOZHAO_SCHEDULE_SERVER + it.pathName +  '/stop').then(() => {
-        console.log('stop success -> ', it.pathName);
-      }).catch(err => {
-        console.log('stop error -> ', it.pathName, err.message);
-      })
+      const scheduleJobInstance = this.scheduleService.make(it).scheduleJobInstance.getInstance();
+      console.log('stop success -> ', it.pathName);
+      scheduleJobInstance && scheduleJobInstance.cancel();
     })
     return list;
   }
-}
 
-export function ScheduleControllerMaker(storageListItemDto: StorageListItemDto): Type<any> {
-  @Controller()
-  class ScheduleController extends AutoStart {
-    public scheduleInfo: ScheduleInfoDto;
-    constructor(private scheduleService: ScheduleService) {
-      super();
-      this.scheduleInfo = this.scheduleService.make(storageListItemDto);
-    }
-
-    @Post([storageListItemDto.pathName])
-    async set(@Body() body) {
-      return this.scheduleInfo.requestHandler(body);
-    }
-    // 获取当前schedule的下次触发时间
-    @Get([storageListItemDto.pathName + '/list'])
-    async get(@Query() query) {
-      const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
-      return {
-        nextUpdateTime: scheduleJobInstance && scheduleJobInstance.nextInvocation() || 0,
-      };
-    }
-    // 终止schedule
-    @Get([storageListItemDto.pathName + '/stop'])
-    async stop(@Query() query) {
-      const scheduleJobInstance = this.scheduleInfo.scheduleJobInstance.getInstance();
-      return {
-        isCancelled: scheduleJobInstance && scheduleJobInstance.cancel(),
-      };
-    }
+  @Post('/run/:type/:key')
+  async run(@Param('type') type: string, @Param('key') key: string, @Body() body) {
+    return this.makeScheduleInfo(type, key).requestHandler(body || {});
   }
-  return ScheduleController;
+
+  // 获取当前handler定时任务的下次触发时间
+  @Get('/run/:type/:key/list')
+  async get(@Param('type') type: string, @Param('key') key: string) {
+    const scheduleJobInstance = this.makeScheduleInfo(type, key).scheduleJobInstance.getInstance();
+    return {
+      nextUpdateTime: scheduleJobInstance && scheduleJobInstance.nextInvocation() || 0,
+    };
+  }
+
+  // 终止handler定时任务
+  @Get('/run/:type/:key/stop')
+  async stop(@Param('type') type: string, @Param('key') key: string) {
+    const scheduleJobInstance = this.makeScheduleInfo(type, key).scheduleJobInstance.getInstance();
+    return {
+      isCancelled: scheduleJobInstance && scheduleJobInstance.cancel(),
+    };
+  }
+
+  private makeScheduleInfo(type: string, key: string): ScheduleInfoDto {
+    const list = this.updateListService.get(scheduleStorageDto);
+    const target = list.find(item => item.type === type && item.key === key);
+
+    if (!target) {
+      throw new NotFoundException(`handler not found: ${type}/${key}`);
+    }
+
+    return this.scheduleService.make(target);
+  }
 }

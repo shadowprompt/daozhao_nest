@@ -12,13 +12,14 @@ export class ScheduleFactoryService {
   }
   make(accessTokenScheduleInfoDto: AccessTokenScheduleInfoDto, fetchData) {
     const label = `${accessTokenScheduleInfoDto.key}-@-${accessTokenScheduleInfoDto.type}`;
+    const instanceKey = `${accessTokenScheduleInfoDto.type}:${accessTokenScheduleInfoDto.key}`;
 
     const scheduleJobInstance = {
       getInstance() {
-        return instanceStore.getItem(accessTokenScheduleInfoDto.type);
+        return instanceStore.getItem(instanceKey);
       },
       setInstance(value) {
-        return instanceStore.setItem(accessTokenScheduleInfoDto.type, value);
+        return instanceStore.setItem(instanceKey, value);
       }
     };
     /**
@@ -34,10 +35,13 @@ export class ScheduleFactoryService {
       scheduleJobInstance.setInstance(
         nodeSchedule.scheduleJob(nextTime, () => {
           dLog(`执行 ${label} 定时任务`);
-          fetchData({isDirect: true}).catch((err) =>
-            dLog(`定时请求 ${label} 失败`, err),
-          );
-          setSchedule(minutes);
+          fetchData({isDirect: true})
+            .catch((err) =>
+              dLog(`定时请求 ${label} 失败`, err),
+            )
+            .finally(() => {
+              setSchedule(minutes);
+            });
         }));
       return scheduleJobInstance.getInstance();
     }
