@@ -57,7 +57,7 @@ const APPGALLERY_PLATFORM_CONFIGS: Record<AppGalleryPlatformType, AppGalleryPlat
     scheduleKey: 'versionScanner',
     notifyIdPrefix: 'appgallery-notify',
     idempotencyPrefix: 'appgallery-version',
-    notificationTitle: 'AppGallery 应用版本更新',
+    notificationTitle: 'AppGallery Android 应用版本更新',
     payloadType: 'scanner.appgallery.version_changed',
     logLabel: 'AppGallery Android',
   },
@@ -706,7 +706,7 @@ export class AppGalleryService implements OnModuleInit {
   }
 
   private makeNotificationContent(config: AppGalleryPlatformConfig, changed: AppGalleryVersionChangeDto[]) {
-    const platformLabel = config.platform === 'harmony' ? ' HarmonyOS 版' : '';
+    const platformLabel = config.platform === 'harmony' ? ' HarmonyOS 版' : ' Android 版';
     const lines = changed.map(item => `${item.name || item.packageName}${platformLabel} ${item.oldVersion} → ${item.newVersion}`);
     const content = lines.join('\n');
     if (content.length <= 1000) {

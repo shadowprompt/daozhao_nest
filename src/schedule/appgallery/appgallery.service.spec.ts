@@ -107,8 +107,8 @@ describe('AppGalleryService notification outbox', () => {
     expect(axios.post).toHaveBeenCalledTimes(1);
     const [url, body, options] = (axios.post as jest.Mock).mock.calls[0];
     expect(url).toBe('http://echoqb.local/api/v1/open/apps/appgallery-monitor/channels/app-version-updates/messages');
-    expect(body.title).toBe('AppGallery 应用版本更新');
-    expect(body.content).toBe('测试应用 1.0.0 → 1.1.0');
+    expect(body.title).toBe('AppGallery Android 应用版本更新');
+    expect(body.content).toBe('测试应用 Android 版 1.0.0 → 1.1.0');
     expect(body.action_url).toBe('https://appgallery.huawei.com/app/C100');
     expect(body.payload.type).toBe('scanner.appgallery.version_changed');
     expect(body.ttl_seconds).toBe(86400);
