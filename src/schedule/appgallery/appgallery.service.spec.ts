@@ -45,6 +45,7 @@ describe('AppGalleryService notification outbox', () => {
       appId: 'C100',
       packageName: 'com.test.app',
       name: '测试应用',
+      platform: 'android',
       version,
       versionCode,
       developerName: 'tester',
@@ -155,5 +156,53 @@ describe('AppGalleryService notification outbox', () => {
     expect(mockStorage.notificationOutbox[0].status).toBe('sent');
     expect(mockStorage.notificationOutbox[0].attempts).toBe(2);
     expect(mockStorage.notificationOutbox[0].messageId).toBe('msg_retry');
+  });
+
+  it('keeps harmony snapshot and notification outbox independent', async () => {
+    process.env.ECHOQB_NOTIFY_ENABLED = 'true';
+    process.env.ECHOQB_APP_API_KEY = 'eqa_test';
+    mockStorage.harmonyWatchedApps = [{ packageName: 'me.ele.eleme', name: '淘宝闪购' }];
+    mockStorage.harmonyVersionSnapshot = {
+      'me.ele.eleme': {
+        packageName: 'me.ele.eleme',
+        name: '淘宝闪购',
+        platform: 'harmony',
+        version: '12.8.37',
+        versionCode: 253,
+        detailUrl: 'https://appgallery.huawei.com/app/C5765880207854642753',
+      },
+    };
+    (axios.post as jest.Mock).mockResolvedValue({
+      data: {
+        message_id: 'msg_harmony',
+        status: 'queued',
+        recipient_count: 1,
+        delivery_count: 2,
+      },
+    });
+    const service = createService();
+    jest.spyOn(service as any, 'fetchAppInfo').mockResolvedValue({
+      appId: 'C5765880207854642753',
+      packageName: 'me.ele.eleme',
+      name: '淘宝闪购',
+      platform: 'harmony',
+      version: '12.8.38',
+      versionCode: 254,
+      developerName: 'tester',
+      detailUrl: 'https://appgallery.huawei.com/app/C5765880207854642753',
+      updatedAt: 1000,
+    });
+
+    await service.scanHarmony({ skipSetSchedule: true });
+
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    const [, body, options] = (axios.post as jest.Mock).mock.calls[0];
+    expect(body.title).toBe('AppGallery 鸿蒙应用版本更新');
+    expect(body.content).toBe('淘宝闪购 HarmonyOS 版 12.8.37 → 12.8.38');
+    expect(body.payload.type).toBe('scanner.appgallery.harmony_version_changed');
+    expect(body.payload.platform).toBe('harmony');
+    expect(options.headers['Idempotency-Key']).toMatch(/^appgallery-harmony-version:/);
+    expect(mockStorage.harmonyNotificationOutbox[0].status).toBe('sent');
+    expect(mockStorage.notificationOutbox).toBeUndefined();
   });
 });

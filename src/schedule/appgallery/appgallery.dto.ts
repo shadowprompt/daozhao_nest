@@ -19,9 +19,23 @@ export const appGalleryWatchedAppsStorage: StorageDto = {
   ]),
 };
 
+export const appGalleryHarmonyWatchedAppsStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'harmonyWatchedApps',
+  emptyValue: JSON.stringify([
+    { packageName: 'me.ele.eleme', name: '淘宝闪购' },
+  ]),
+};
+
 export const appGalleryVersionSnapshotStorage: StorageDto = {
   name: 'appgallery',
   key: 'versionSnapshot',
+  emptyValue: '{}',
+};
+
+export const appGalleryHarmonyVersionSnapshotStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'harmonyVersionSnapshot',
   emptyValue: '{}',
 };
 
@@ -31,9 +45,21 @@ export const appGalleryScanResultStorage: StorageDto = {
   emptyValue: '{}',
 };
 
+export const appGalleryHarmonyScanResultStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'harmonyLastScanResult',
+  emptyValue: '{}',
+};
+
 export const appGalleryNotificationOutboxStorage: StorageDto = {
   name: 'appgallery',
   key: 'notificationOutbox',
+  emptyValue: '[]',
+};
+
+export const appGalleryHarmonyNotificationOutboxStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'harmonyNotificationOutbox',
   emptyValue: '[]',
 };
 
@@ -42,6 +68,14 @@ export const appGalleryLastNotificationResultStorage: StorageDto = {
   key: 'lastNotificationResult',
   emptyValue: '{}',
 };
+
+export const appGalleryHarmonyLastNotificationResultStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'harmonyLastNotificationResult',
+  emptyValue: '{}',
+};
+
+export type AppGalleryPlatformType = 'android' | 'harmony';
 
 export type AppGalleryWatchedAppDto = {
   packageName: string;
@@ -52,6 +86,7 @@ export type AppGalleryAppVersionDto = {
   appId: string;
   packageName: string;
   name: string;
+  platform?: AppGalleryPlatformType;
   version: string;
   versionCode: number;
   developerName?: string;
@@ -62,6 +97,7 @@ export type AppGalleryAppVersionDto = {
 export type AppGalleryVersionChangeDto = {
   packageName: string;
   name: string;
+  platform?: AppGalleryPlatformType;
   oldVersion: string;
   oldVersionCode: number;
   newVersion: string;
