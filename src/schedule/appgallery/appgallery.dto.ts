@@ -31,6 +31,18 @@ export const appGalleryScanResultStorage: StorageDto = {
   emptyValue: '{}',
 };
 
+export const appGalleryNotificationOutboxStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'notificationOutbox',
+  emptyValue: '[]',
+};
+
+export const appGalleryLastNotificationResultStorage: StorageDto = {
+  name: 'appgallery',
+  key: 'lastNotificationResult',
+  emptyValue: '{}',
+};
+
 export type AppGalleryWatchedAppDto = {
   packageName: string;
   name?: string;
@@ -45,4 +57,30 @@ export type AppGalleryAppVersionDto = {
   developerName?: string;
   detailUrl: string;
   updatedAt: number;
+};
+
+export type AppGalleryVersionChangeDto = {
+  packageName: string;
+  name: string;
+  oldVersion: string;
+  oldVersionCode: number;
+  newVersion: string;
+  newVersionCode: number;
+  detailUrl: string;
+  updatedAt: number;
+};
+
+export type AppGalleryNotificationOutboxItemDto = {
+  id: string;
+  idempotencyKey: string;
+  status: 'pending' | 'sent' | 'failed';
+  changed: AppGalleryVersionChangeDto[];
+  scannedAt: number;
+  createdAt: number;
+  updatedAt: number;
+  attempts: number;
+  lastAttemptAt?: number;
+  errMsg?: string;
+  messageId?: string;
+  response?: any;
 };

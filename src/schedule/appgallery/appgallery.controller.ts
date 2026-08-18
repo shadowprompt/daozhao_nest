@@ -46,6 +46,16 @@ export class AppGalleryController {
     return this.appGalleryService.getLastScanResult();
   }
 
+  @Get('/notifications')
+  getNotificationStatus() {
+    return this.appGalleryService.getNotificationStatus();
+  }
+
+  @Post('/notifications/retry')
+  retryNotifications() {
+    return this.appGalleryService.retryNotifications();
+  }
+
   @Get('/apps/:packageName/version')
   getAppVersion(@Param('packageName') packageName: string) {
     return this.appGalleryService.getAppVersion(packageName);
