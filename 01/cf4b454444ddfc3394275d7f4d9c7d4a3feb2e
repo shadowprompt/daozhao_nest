@@ -1,0 +1,21 @@
+src/schedule/appgallery/appgallery.service.ts
+  s_d3f4e0d5637140::t_4dc3cc9b650a76 60,709
+src/schedule/appgallery/appgallery.service.spec.ts
+  s_d3f4e0d5637140::t_d9dd934e6bb730 110-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.40-trip",
+  "base_commit_sha": "01cf4b454444ddfc3394275d7f4d9c7d4a3feb2e",
+  "prompts": {},
+  "sessions": {
+    "s_d3f4e0d5637140": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a01241-f239-7183-8d1e-8d4c27ea0b89",
+        "model": "gpt-5.5"
+      },
+      "human_author": "hxiong <hxiong@ctrip.com>"
+    }
+  }
+}
