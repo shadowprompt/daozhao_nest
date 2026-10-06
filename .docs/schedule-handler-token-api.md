@@ -35,6 +35,9 @@ GET  /access-token/:type/list
 POST /access-token/weixin
 GET  /access-token/weixin/list
 
+POST /access-token/wxPublicAppid1
+GET  /access-token/wxPublicAppid1/list
+
 POST /access-token/HMS
 GET  /access-token/HMS/list
 
@@ -64,6 +67,35 @@ curl http://localhost:5566/access-token/weixin/list
 {
   "nextUpdateTime": "2026-08-18T10:30:00.000Z"
 }
+```
+
+### 微信公众号 wxPublicAppid1 信息捕快
+
+该平台使用以下环境变量请求微信官方接口：
+
+```bash
+WXPUBLIC_APPID1=你的公众号AppID
+WXPUBLIC_APPSECRET1=你的公众号AppSecret
+```
+
+对应的本地 token 存储名为：
+
+```text
+wxPublicAppid1
+```
+
+手动强制刷新：
+
+```bash
+curl -X POST http://localhost:5566/access-token/wxPublicAppid1 \
+  -H "Content-Type: application/json" \
+  -d '{"isDirect": true}'
+```
+
+查看下一次自动刷新时间：
+
+```bash
+curl http://localhost:5566/access-token/wxPublicAppid1/list
 ```
 
 ### 新增 token 平台

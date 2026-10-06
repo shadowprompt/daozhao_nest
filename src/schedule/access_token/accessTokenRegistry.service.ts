@@ -53,6 +53,12 @@ export const ACCESS_TOKEN_PLATFORMS: AccessTokenPlatformConfig[] = [
     httpError: weixinError,
   },
   {
+    type: 'wxPublicAppid1',
+    daozhaoPath: '/wxPublicAppid1',
+    requestOptions: () => makeWeixinOptions('WXPUBLIC_APPID1', 'WXPUBLIC_APPSECRET1'),
+    httpError: weixinError,
+  },
+  {
     type: 'weixinFitconverter',
     daozhaoPath: '/weixinFitconverter',
     requestOptions: () => makeWeixinOptions('FITCONVERTER_WX_APPID', 'FITCONVERTER_WX_APPSECRET'),
