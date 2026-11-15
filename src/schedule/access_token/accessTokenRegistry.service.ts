@@ -71,6 +71,13 @@ export const ACCESS_TOKEN_PLATFORMS: AccessTokenPlatformConfig[] = [
     httpError: weixinError,
   },
   {
+    type: 'wxminTrackBuddy', // 运动记忆库
+    key: 'wxminTrackBuddy',
+    daozhaoPath: '/wxminTrackBuddy',
+    requestOptions: () => makeWeixinOptions('TRACKBUDDY_WXMIN_APPID', 'TRACKBUDDY_WXMIN_APPSECRET'),
+    httpError: weixinError,
+  },
+  {
     type: 'HMS',
     daozhaoPath: '/HMS',
     requestOptions: () => makeHmsOptions('HMS_CLIENT_ID', 'HMS_CLIENT_SECRET'),

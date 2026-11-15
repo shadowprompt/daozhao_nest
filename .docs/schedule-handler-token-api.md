@@ -98,6 +98,29 @@ curl -X POST http://localhost:5566/access-token/wxPublicAppid1 \
 curl http://localhost:5566/access-token/wxPublicAppid1/list
 ```
 
+### TrackBuddy 微信小程序
+
+该平台使用以下环境变量请求微信官方接口，token 在本地以 `wxminTrackBuddy` 为存储名：
+
+```bash
+TRACKBUDDY_WXMIN_APPID=你的TrackBuddy小程序AppID
+TRACKBUDDY_WXMIN_APPSECRET=你的TrackBuddy小程序AppSecret
+```
+
+手动强制刷新：
+
+```bash
+curl -X POST http://localhost:5566/access-token/wxminTrackBuddy \
+  -H "Content-Type: application/json" \
+  -d '{"isDirect": true}'
+```
+
+查看下一次自动刷新时间：
+
+```bash
+curl http://localhost:5566/access-token/wxminTrackBuddy/list
+```
+
 ### 新增 token 平台
 
 新增平台时，优先修改：
